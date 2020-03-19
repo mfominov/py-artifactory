@@ -5,7 +5,7 @@ Artifactory repository replication
 __copyright__ = "Copyright (C) 2016 Veritas Technologies LLC. All rights reserved."
 
 # stdlib imports
-import httplib
+import http.client
 
 # third party imports
 import requests
@@ -30,7 +30,7 @@ class Replications(HTTP):
         except requests.exceptions.HTTPError as e:
             # NOTE: As artifactory api sends execption instead of
             # empty data structure
-            if e.response.status_code != httplib.NOT_FOUND:
+            if e.response.status_code != http.client.NOT_FOUND:
                 raise
             return []
 

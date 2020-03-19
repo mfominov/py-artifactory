@@ -11,7 +11,7 @@ class TestLdapGroups:
             artifactory, mockup_post):
 
         http_post.return_value = mockup_post
-        expected_value = {u'info': u'Groups successfully imported'}
+        expected_value = {'info': 'Groups successfully imported'}
 
         ldap_groups = artifactory.ldap_groups.new()
         ldap_groups.group_name = "CompanyGroups"

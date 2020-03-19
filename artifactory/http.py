@@ -6,7 +6,7 @@ __copyright__ = "Copyright (C) 2016 Veritas Technologies LLC. All rights reserve
 
 # std imports
 import json
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 # third party imports
 import requests
@@ -44,7 +44,7 @@ class HTTP(object):
         endpoint = self.abs_endpoint(endpoint)
 
         if kwargs:
-            data = dict(data.iteritems() + kwargs.iteritems())
+            data = dict(iter(data.items()) + iter(kwargs.items()))
 
         response = requests.get(endpoint, headers=headers,
                 params=data, auth=(self.api.username, self.api.password))
@@ -57,7 +57,7 @@ class HTTP(object):
 
         # give priority to user data
         if not data:
-            data = dict(self.to_payload().iteritems() + context.iteritems()) if context else self.to_payload()
+            data = dict(iter(self.to_payload().items()) + iter(context.items())) if context else self.to_payload()
 
         response = requests.post(endpoint, headers=headers,
                 data=data, auth=(self.api.username, self.api.password))
@@ -72,7 +72,7 @@ class HTTP(object):
 
         # give priority to user data
         if not data:
-            data = dict(self.to_payload().iteritems() + context.iteritems()) if context else self.to_payload()
+            data = dict(iter(self.to_payload().items()) + iter(context.items())) if context else self.to_payload()
 
         response = requests.put(endpoint, headers=headers,
                 data=data, auth=(self.api.username, self.api.password))
@@ -96,7 +96,7 @@ class HTTP(object):
 
         try:
             response.raise_for_status()
-        except Exception, e:
+        except Exception as e:
             # NOTE: Exception is re-raised as to add error message
             # to exception send by server side
             message = "{0}: {1}".format(e.message, response.content)
@@ -128,7 +128,7 @@ class HTTP(object):
             self.log.debug("Rendering payload as json {0}".format(
                 response.json()))
             return response.json()
-        except Exception, e:
+        except Exception as e:
             self.log.error(e)
             # NOTE: Improve this logic later
             try:
@@ -136,7 +136,7 @@ class HTTP(object):
                 self.log.debug("Rendering payload as xml {0}".format(
                     root))
                 return root
-            except Exception, e:
+            except Exception as e:
                 self.log.error(e)
                 self.log.debug("Rendering payload as content {0}".format(
                     response.content))
@@ -149,7 +149,7 @@ class HTTP(object):
         # tags match variable names sent by artifactory server
         tags = instance._get_tags()
 
-        for tag, value in data.iteritems():
+        for tag, value in data.items():
             field = tags.get(tag)
             # field[0] - variable name
             # field[1] - default type
@@ -162,7 +162,7 @@ class HTTP(object):
 
     def to_dict(self):
         data = {}
-        for field, details in self._get_fields().iteritems():
+        for field, details in self._get_fields().items():
             # details[0] - tags
             # details[1] - defualt value
             data[details[0]] = getattr(self, field, details[1])

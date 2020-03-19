@@ -36,7 +36,7 @@ class Configuration(HTTP):
     def _find_nsmap(self, system_config):
 
         try:
-            return {self.nsmap_name: [nsmap for nsmap in system_config.nsmap.values()
+            return {self.nsmap_name: [nsmap for nsmap in list(system_config.nsmap.values())
                 if "xsd" in nsmap][0]}
         except:
             message = "XML nsmap not found"
